@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | AgriBid</title>
+    <link rel="stylesheet" href="css/Style.css" />
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #27ae60;
+            --secondary-color: #2ecc71;
+            --accent-color: #ffc107;
+            --background: #f5f6fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --card-hover-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+        }
+
+        .home {
+            margin-left:  0px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.close ~ .home {
+            margin-left: 12px;
+        }
+
+        /* Notification Page Styles */
+        .notifications-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-mark-all {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-mark-all:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-settings {
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-settings:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Notification Cards */
+        .notification-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 4px solid transparent;
+        }
+
+        .notification-card:hover {
+            box-shadow: var(--card-hover-shadow);
+            transform: translateY(-3px);
+        }
+
+        .notification-card.unread {
+            border-left-color: var(--primary-color);
+            background-color: rgba(39, 174, 96, 0.05);
+        }
+
+        .notification-card.important {
+            border-left-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .notification-card.warning {
+            border-left-color: #f39c12;
+            background-color: rgba(243, 156, 18, 0.05);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .notification-content {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .notification-action-btn:hover {
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .notification-details {
+            flex: 1;
+        }
+
+        /* Notification Types */
+        .notification-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--primary-color);
+        }
+
+        .badge-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .badge-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .badge-info {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        /* Filter Options */
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filter-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .notification-item {
+                flex-direction: column;
+            }
+            
+            .notification-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .notification-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <div class="text logo-text">
+                    <span class="name">AgriBid</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="farmerdashboard.html">
+                            <i class='bx bx-home-alt icon' ></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="addProduct.html">
+                            <i class='bx bx-add-to-queue icon'></i>
+                            <span class="text nav-text">Add Product</span>
+                        </a>
+                    </li>
+                    <li class="nav-link active">
+                        <a href="farmerNotification.html">
+                            <i class='bx bx-bell icon'></i>
+                            <span class="text nav-text">Notifications</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="marketAnalysis.html">
+                            <i class='bx bx-pie-chart-alt icon' ></i>
+                            <span class="text nav-text">Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerBidding.html">
+                            <i class="fa fa-solid fa-gavel icon"></i>
+                            <span class="text nav-text">Bidding</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerWallet.html">
+                            <i class='bx bx-wallet icon' ></i>
+                            <span class="text nav-text">Wallets</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerProfile.html" >
+                            <i class='bx bxs-user-detail icon'></i>
+                            <span class="text nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li class="">
+                    <a href="#">
+                        <i class='bx bx-log-out icon' ></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </nav>
+    <section class="home">
+        <div class="notifications-container">
+            <div class="page-header">
+                <h1><i class='bx bx-bell'></i> Notifications</h1>
+                <div class="notification-actions">
+                    <button class="btn-mark-all">
+                        <i class='bx bx-check-double'></i> Mark all as read
+                    </button>
+                    <button class="btn-settings">
+                        <i class='bx bx-cog'></i> Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Options -->
+            <div class="filter-options">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Unread</button>
+                <button class="filter-btn">Bids</button>
+                <button class="filter-btn">Orders</button>
+                <button class="filter-btn">System</button>
+            </div>
+
+            <!-- Notification List -->
+            <div class="notification-list">
+                <!-- Sample Notification 1 (Unread) -->
+                <div class="notification-card unread">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class='bx bx-money'></i>
+                        </div>
+                        <div class="notification-details">
+                            <div class="notification-header">
+                                <div>
+                                    <span class="notification-title">New Bid Received</span>
+                                    <span class="notification-badge badge-success">Bid</span>
+                                </div>
+                                <span class="notification-time">10 min ago</span>
+                            </div>
+                            <div class="notification-content">
+                                You've received a new bid of ৳120 for your Organic Tomatoes (5kg) from buyer "FreshMart".
+                            </div>
+                            <div class="notification-actions">
+                                <button class="notification-action-btn">View Bid</button>
+                                <button class="notification-action-btn">Mark as read</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 2 (Important) -->
+                <div class="notification-card important">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class='bx bx-package'></i>
+                        </div>
+                        <div class="notification-details">
+                            <div class="notification-header">
+                                <div>
+                                    <span class="notification-title">Order Confirmed</span>
+                                    <span class="notification-badge badge-info">Order</span>
+                                </div>
+                                <span class="notification-time">2 hours ago</span>
+                            </div>
+                            <div class="notification-content">
+                                Your Carrots (20kg) have been purchased by "City Grocers" for ৳220. Delivery scheduled for tomorrow.
+                            </div>
+                            <div class="notification-actions">
+                                <button class="notification-action-btn">View Order</button>
+                                <button class="notification-action-btn">Prepare Shipment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 3 (Warning) -->
+                <div class="notification-card warning">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class='bx bx-calendar-exclamation'></i>
+                        </div>
+                        <div class="notification-details">
+                            <div class="notification-header">
+                                <div>
+                                    <span class="notification-title">Auction Ending Soon</span>
+                                    <span class="notification-badge badge-warning">Reminder</span>
+                                </div>
+                                <span class="notification-time">5 hours ago</span>
+                            </div>
+                            <div class="notification-content">
+                                Your auction for Premium Strawberries (15 boxes) ends in 2 hours. Current highest bid is ৳450.
+                            </div>
+                            <div class="notification-actions">
+                                <button class="notification-action-btn">View Auction</button>
+                                <button class="notification-action-btn">Dismiss</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 4 (Read) -->
+                <div class="notification-card">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class='bx bx-check-shield'></i>
+                        </div>
+                        <div class="notification-details">
+                            <div class="notification-header">
+                                <div>
+                                    <span class="notification-title">Payment Received</span>
+                                    <span class="notification-badge badge-success">Payment</span>
+                                </div>
+                                <span class="notification-time">Yesterday</span>
+                            </div>
+                            <div class="notification-content">
+                                Payment of ৳1,850 for your Organic Potatoes has been credited to your AgriBid Wallet.
+                            </div>
+                            <div class="notification-actions">
+                                <button class="notification-action-btn">View Transaction</button>
+                                <button class="notification-action-btn">Withdraw Funds</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Notification 5 (System) -->
+                <div class="notification-card">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class='bx bx-info-circle'></i>
+                        </div>
+                        <div class="notification-details">
+                            <div class="notification-header">
+                                <div>
+                                    <span class="notification-title">System Maintenance</span>
+                                    <span class="notification-badge badge-info">System</span>
+                                </div>
+                                <span class="notification-time">2 days ago</span>
+                            </div>
+                            <div class="notification-content">
+                                Scheduled maintenance will occur tomorrow from 2:00 AM to 4:00 AM. The platform may be temporarily unavailable.
+                            </div>
+                            <div class="notification-actions">
+                                <button class="notification-action-btn">Learn More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (commented out, shown when no notifications) -->
+            <!--
+            <div class="empty-state">
+                <i class='bx bx-bell-off'></i>
+                <h3>No notifications yet</h3>
+                <p>When you get notifications, they'll appear here</p>
+            </div>
+            -->
+        </div>
+    </section>
+
+    <script>
+        const body = document.querySelector('body'),
+      sidebar = body.querySelector('nav'),
+      toggle = body.querySelector(".toggle"),
+      searchBtn = body.querySelector(".search-box"),
+      modeSwitch = body.querySelector(".toggle-switch"),
+      modeText = body.querySelector(".mode-text");
+        toggle.addEventListener("click" , () =>{
+            sidebar.classList.toggle("close");
+        })
+        searchBtn.addEventListener("click" , () =>{
+            sidebar.classList.remove("close");
+        })
+        modeSwitch.addEventListener("click" , () =>{
+            body.classList.toggle("dark");
+            
+            if(body.classList.contains("dark")){
+                modeText.innerText = "Light mode";
+            }else{
+                modeText.innerText = "Dark mode";
+            }
+        });
+
+        // Notification filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Here you would filter notifications based on the selected filter
+                // For this example, we're just toggling a class
+                const filterType = this.textContent.toLowerCase();
+                console.log(`Filtering by: ${filterType}`);
+            });
+        });
+
+        // Mark all as read functionality
+        document.querySelector('.btn-mark-all').addEventListener('click', function() {
+            document.querySelectorAll('.notification-card.unread').forEach(card => {
+                card.classList.remove('unread');
+            });
+            alert('All notifications marked as read');
+        });
+
+        // Notification action buttons
+        document.querySelectorAll('.notification-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent;
+                const notificationCard = this.closest('.notification-card');
+                
+                if (action.includes('Mark as read')) {
+                    notificationCard.classList.remove('unread');
+                }
+                
+                // Here you would implement the specific action
+                console.log(`Action: ${action}`);
+            });
+        });
+    </script>
+     
+     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
