@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriBid - Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/Style.css" />
+    <style>
+        :root {
+            --primary-color: #4e9525;
+            --secondary-color: #f8f9fa;
+            --dark-color: #343a40;
+            --light-color: #ffffff;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar {
+            height: 100vh;
+            background-color: var(--dark-color);
+            color: white;
+            position: fixed;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            border-radius: 5px;
+            padding: 10px 15px;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: absolute;
+    top: 0;
+    top: 0;
+   
+    /* height: 100vh; */
+    width: calc(100% - 250px);
+    background-color: var(--body-color);
+    transition: var(--tran-05);
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: var(--light-color);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .stat-card {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-card .stat-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .badge-pending {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .badge-approved {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-rejected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3d7a1d;
+            border-color: #3d7a1d;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: #6c757d;
+        }
+        
+        .search-box input {
+            padding-left: 40px;
+            border-radius: 20px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .bid-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .bid-item {
+            border-left: 3px solid var(--primary-color);
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+        }
+        
+        .bid-item .bid-price {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.7rem;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-lg-flex">
+        <!-- Sidebar -->
+        <div class="sidebar w-250 px-3 py-4">
+            <h4 class="text-center mb-4">AgriBid Admin</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#users">
+                        <i class="fas fa-users"></i> User Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#approvals">
+                        <i class="fas fa-user-check"></i> Approvals
+                        <span class="badge bg-danger notification-badge">5</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#products">
+                        <i class="fas fa-shopping-basket"></i> Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#inventory">
+                        <i class="fas fa-warehouse"></i> Farmers Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#bids">
+                        <i class="fas fa-gavel"></i> Live Bids
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#payments">
+                        <i class="fas fa-money-bill-wave"></i> Payments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#market-data">
+                        <i class="fas fa-chart-line"></i> Market Analysis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded-3 mb-4 shadow-sm">
+                <div class="container-fluid">
+                    <button class="navbar-toggler d-lg-none" type="button">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="search-box ms-auto me-3">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </div>
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/40" alt="Admin" class="user-avatar me-2">
+                            <span class="d-none d-sm-inline">Admin User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div id="dashboard-content">
+                <h4 class="mb-4">Dashboard Overview</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted">Total Users</h6>
+                                        <h3>1,254</h3>
+                                        <span class="text-success"><i class="fas fa-arrow-up"></i> 12%</span>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted">Active Farmers</h6>
+                                        <h3>486</h3>
+                                        <span class="text-success"><i class="fas fa-arrow-up"></i> 8%</span>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-tractor"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted">Pending Approvals</h6>
+                                        <h3>23</h3>
+                                        <span class="text-danger"><i class="fas fa-arrow-down"></i> 5%</span>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted">Today's Bids</h6>
+                                        <h3>147</h3>
+                                        <span class="text-success"><i class="fas fa-arrow-up"></i> 22%</span>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-gavel"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Recent Bids Activity</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary">Day</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Week</button>
+                                    <button class="btn btn-sm btn-primary">Month</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="bidsChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Quick Actions
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary w-100 mb-3">
+                                    <i class="fas fa-user-plus me-2"></i> Add New User
+                                </button>
+                                <button class="btn btn-outline-primary w-100 mb-3">
+                                    <i class="fas fa-upload me-2"></i> Upload Market Data
+                                </button>
+                                <button class="btn btn-outline-primary w-100 mb-3">
+                                    <i class="fas fa-file-export me-2"></i> Export Reports
+                                </button>
+                                <button class="btn btn-outline-danger w-100">
+                                    <i class="fas fa-bell me-2"></i> Send Notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Pending Approvals
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Name</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="badge bg-warning">User</span></td>
+                                                <td>John Farmer</td>
+                                                <td>2023-06-15</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success">Approve</button>
+                                                    <button class="btn btn-sm btn-danger">Reject</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge bg-info">Product</span></td>
+                                                <td>Organic Tomatoes</td>
+                                                <td>2023-06-14</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success">Approve</button>
+                                                    <button class="btn btn-sm btn-danger">Reject</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge bg-warning">User</span></td>
+                                                <td>Sarah Buyer</td>
+                                                <td>2023-06-14</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success">Approve</button>
+                                                    <button class="btn btn-sm btn-danger">Reject</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Payments
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>AgroBuy Ltd</td>
+                                                <td>$1,250.00</td>
+                                                <td>2023-06-15</td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Fresh Farms</td>
+                                                <td>$845.50</td>
+                                                <td>2023-06-14</td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Green Valley</td>
+                                                <td>$2,100.00</td>
+                                                <td>2023-06-13</td>
+                                                <td><span class="badge bg-warning">Pending</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Management Content (hidden by default) -->
+            <div id="users-content" >
+                <h4 class="mb-4">User Management</h4>
+                
+                <div class="card mb-4">
+                    <div class="card-header  justify-content-between align-items-center">
+                        <span>All Users</span>
+                        <div>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="fas fa-plus me-1"></i> Add User
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1001</td>
+                                        <td>jhon</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            John Farmer
+                                        </td>
+                                        <td>john@example.com</td>
+                                        <td><span class="badge bg-info">Farmer</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>2023-05-10</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1002</td>
+                                        <td>sarah</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            Sarah Buyer
+                                        </td>
+                                        <td>sarah@example.com</td>
+                                        <td><span class="badge bg-warning">Buyer</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>2023-05-15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1003</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            Mike Trader
+                                        </td>
+                                        <td>mike@example.com</td>
+                                        <td><span class="badge bg-primary">Trader</span></td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>2023-06-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Approvals Content (hidden by default) -->
+            <div id="approvals-content" style="display: none;">
+                <h4 class="mb-4">Pending Approvals</h4>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                User Approvals
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Applied On</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                                    Robert Johnson
+                                                </td>
+                                                <td><span class="badge bg-info">Farmer</span></td>
+                                                <td>2023-06-15</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                                    AgroBuy Ltd
+                                                </td>
+                                                <td><span class="badge bg-warning">Buyer</span></td>
+                                                <td>2023-06-14</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                Product Approvals
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Farmer</th>
+                                                <th>Submitted</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Organic Wheat</td>
+                                                <td>John Farmer</td>
+                                                <td>2023-06-15</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Premium Coffee Beans</td>
+                                                <td>Mountain Farms</td>
+                                                <td>2023-06-14</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Content (hidden by default) -->
+            <div id="products-content" style="display: none;">
+                <h4 class="mb-4">Products Management</h4>
+                
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>All Products</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary">All</button>
+                            <button class="btn btn-sm btn-outline-secondary">Approved</button>
+                            <button class="btn btn-sm btn-outline-secondary">Pending</button>
+                            <button class="btn btn-sm btn-outline-secondary">Rejected</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Farmer</th>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="me-2" style="width:40px;height:40px;object-fit:cover;">
+                                            Organic Tomatoes
+                                        </td>
+                                        <td>Green Valley Farms</td>
+                                        <td>Vegetables</td>
+                                        <td>200 kg</td>
+                                        <td>$1.20/kg</td>
+                                        <td><span class="badge bg-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="me-2" style="width:40px;height:40px;object-fit:cover;">
+                                            Premium Coffee Beans
+                                        </td>
+                                        <td>Mountain Farms</td>
+                                        <td>Beverages</td>
+                                        <td>50 kg</td>
+                                        <td>$5.00/kg</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="me-2" style="width:40px;height:40px;object-fit:cover;">
+                                            Fresh Apples
+                                        </td>
+                                        <td>Orchard Fresh</td>
+                                        <td>Fruits</td>
+                                        <td>150 kg</td>
+                                        <td>$0.80/kg</td>
+                                        <td><span class="badge bg-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inventory Content (hidden by default) -->
+            <div id="inventory-content" style="display: none;">
+                <h4 class="mb-4">Farmers Inventory</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" placeholder="Search farmer...">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select">
+                            <option selected>All Categories</option>
+                            <option>Vegetables</option>
+                            <option>Fruits</option>
+                            <option>Grains</option>
+                            <option>Dairy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select">
+                            <option selected>All Locations</option>
+                            <option>North Region</option>
+                            <option>South Region</option>
+                            <option>East Region</option>
+                            <option>West Region</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Farmer</th>
+                                        <th>Location</th>
+                                        <th>Total Products</th>
+                                        <th>Total Quantity</th>
+                                        <th>Last Updated</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            Green Valley Farms
+                                        </td>
+                                        <td>North Region</td>
+                                        <td>8</td>
+                                        <td>1,250 kg</td>
+                                        <td>2023-06-15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">View Inventory</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            Mountain Farms
+                                        </td>
+                                        <td>West Region</td>
+                                        <td>5</td>
+                                        <td>800 kg</td>
+                                        <td>2023-06-14</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">View Inventory</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="https://via.placeholder.com/40" class="user-avatar me-2">
+                                            Orchard Fresh
+                                        </td>
+                                        <td>South Region</td>
+                                        <td>12</td>
+                                        <td>2,100 kg</td>
+                                        <td>2023-06-13</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">View Inventory</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bids Content (hidden by default) -->
+            <div id="bids-content" style="display: none;">
+                <h4 class="mb-4">Live Bids Monitoring</h4>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                Active Bids
+                            </div>
+                            <div class="card-body">
+                                <div class="bid-history">
+                                    <div class="bid-item">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Organic Tomatoes</strong>
+                                            <span class="bid-price">$1.25/kg</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small">
+                                            <span>AgroBuy Ltd</span>
+                                            <span>2 min ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bid-item">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Organic Tomatoes</strong>
+                                            <span class="bid-price">$1.20/kg</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small">
+                                            <span>Fresh Market Co.</span>
+                                            <span>5 min ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bid-item">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Premium Coffee Beans</strong>
+                                            <span class="bid-price">$5.20/kg</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small">
+                                            <span>Coffee Roasters</span>
+                                            <span>12 min ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bid-item">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Fresh Apples</strong>
+                                            <span class="bid-price">$0.85/kg</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-muted small">
+                                            <span>Fruit Distributors</span>
+                                            <span>25 min ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                Bid Statistics
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <h3>12</h3>
+                                    <p class="text-muted">Active Bids</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Top Products</h6>
+                                    <div class="progress mb-2" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 45%">Tomatoes</div>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 20px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 30%">Coffee</div>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 20px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 15%">Apples</div>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 20px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 10%">Others</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Recent Completed Bids
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Farmer</th>
+                                        <th>Buyer</th>
+                                        <th>Final Price</th>
+                                        <th>Quantity</th>
+                                        <th>Closed On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Organic Wheat</td>
+                                        <td>John Farmer</td>
+                                        <td>Bakery Co.</td>
+                                        <td>$1.10/kg</td>
+                                        <td>500 kg</td>
+                                        <td>2023-06-14</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fresh Milk</td>
+                                        <td>Dairy Farms</td>
+                                        <td>Milk Distributors</td>
+                                        <td>$0.75/liter</td>
+                                        <td>200 liters</td>
+                                        <td>2023-06-13</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Organic Eggs</td>
+                                        <td>Poultry Farms</td>
+                                        <td>Supermarket Chain</td>
+                                        <td>$2.50/dozen</td>
+                                        <td>100 dozen</td>
+                                        <td>2023-06-12</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payments Content (hidden by default) -->
+            <div id="payments-content" style="display: none;">
+                <h4 class="mb-4">Payments Management</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Payment Summary
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <h3>$12,450</h3>
+                                        <p class="text-muted">Today</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h3>$85,700</h3>
+                                        <p class="text-muted">This Week</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h3>$320,500</h3>
+                                        <p class="text-muted">This Month</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Payment Methods
+                            </div>
+                            <div class="card-body">
+                                <canvas id="paymentMethodsChart" height="120"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>All Transactions</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary">All</button>
+                            <button class="btn btn-sm btn-outline-secondary">Completed</button>
+                            <button class="btn btn-sm btn-outline-secondary">Pending</button>
+                            <button class="btn btn-sm btn-outline-secondary">Failed</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>User</th>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#TX-10025</td>
+                                        <td>AgroBuy Ltd</td>
+                                        <td>$1,250.00</td>
+                                        <td>Bank Transfer</td>
+                                        <td>2023-06-15</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TX-10024</td>
+                                        <td>Fresh Farms</td>
+                                        <td>$845.50</td>
+                                        <td>Credit Card</td>
+                                        <td>2023-06-14</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TX-10023</td>
+                                        <td>Green Valley</td>
+                                        <td>$2,100.00</td>
+                                        <td>Mobile Money</td>
+                                        <td>2023-06-13</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Market Data Content (hidden by default) -->
+            <div id="market-data-content" style="display: none;">
+                <h4 class="mb-4">Market Analysis</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Upload Market Data
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="dataFile" class="form-label">Select Spreadsheet File</label>
+                                        <input class="form-control" type="file" id="dataFile" accept=".xlsx, .xls, .csv">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dataType" class="form-label">Data Type</label>
+                                        <select class="form-select" id="dataType">
+                                            <option selected>Price Data</option>
+                                            <option>Volume Data</option>
+                                            <option>Market Trends</option>
+                                            <option>Commodity Reports</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dataDate" class="form-label">Date</label>
+                                        <input type="date" class="form-control" id="dataDate">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Upload Data</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Uploads
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>File</th>
+                                                <th>Type</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>price_data_june.xlsx</td>
+                                                <td>Price Data</td>
+                                                <td>2023-06-15</td>
+                                                <td><span class="badge bg-success">Processed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>volume_may.csv</td>
+                                                <td>Volume Data</td>
+                                                <td>2023-06-01</td>
+                                                <td><span class="badge bg-success">Processed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>trends_q2.xlsx</td>
+                                                <td>Market Trends</td>
+                                                <td>2023-05-20</td>
+                                                <td><span class="badge bg-success">Processed</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Market Price Trends
+                    </div>
+                    <div class="card-body">
+                        <canvas id="marketTrendsChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">User Name </label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Role</label>
+                            <select class="form-select" id="userRole" required>
+                                <option value="">Select Role</option>
+                                <option value="farmer">Farmer</option>
+                                <option value="buyer">Buyer</option>
+                                <option value="trader">Trader</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="userPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userStatus" class="form-label">Status</label>
+                            <select class="form-select" id="userStatus" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Script -->
+    <script>
+        // Simple navigation between sections
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Hide all content sections
+                document.querySelectorAll('[id$="-content"]').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the selected content section
+                const target = this.getAttribute('href').substring(1);
+                document.getElementById(`${target}-content`).style.display = 'block';
+                
+                // Update active link in sidebar
+                document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bids Chart
+            const bidsCtx = document.getElementById('bidsChart').getContext('2d');
+            const bidsChart = new Chart(bidsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Total Bids',
+                        data: [120, 190, 170, 220, 250, 280],
+                        borderColor: '#4e9525',
+                        backgroundColor: 'rgba(78, 149, 37, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Payment Methods Chart
+            const paymentMethodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
+            const paymentMethodsChart = new Chart(paymentMethodsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bank Transfer', 'Credit Card', 'Mobile Money', 'Other'],
+                    datasets: [{
+                        data: [45, 30, 20, 5],
+                        backgroundColor: [
+                            '#4e9525',
+                            '#ffc107',
+                            '#17a2b8',
+                            '#dc3545'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Market Trends Chart
+            const marketTrendsCtx = document.getElementById('marketTrendsChart').getContext('2d');
+            const marketTrendsChart = new Chart(marketTrendsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Wheat', 'Corn', 'Rice', 'Soybeans', 'Coffee'],
+                    datasets: [{
+                        label: 'Current Price ($)',
+                        data: [210, 180, 220, 250, 500],
+                        backgroundColor: '#4e9525'
+                    }, {
+                        label: 'Previous Month ($)',
+                        data: [200, 175, 210, 240, 480],
+                        backgroundColor: '#b8d9a3'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
