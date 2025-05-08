@@ -113,6 +113,208 @@
             text-align: center;
             display: none;
         }
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 2rem 0;
+        }
+
+        /* Market Card */
+        .market-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .market-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .market-header {
+            border-bottom: 2px solid var(--background);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+
+        .price-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .trend-up {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        .trend-down {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .trend-neutral {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .chart-wrapper {
+            height: 400px;
+            position: relative;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .summary-content {
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .danger-highlight {
+            font-weight: bold;
+            color: var(--danger-color);
+        }
+
+        .warning-highlight {
+            font-weight: bold;
+            color: var(--warning-color);
+        }
+
+        .category-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            background: #eee;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-tab:hover, .category-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .price-comparison {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .price-box {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin: 0 5px;
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .price-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -202,165 +404,790 @@
         </div>
     </nav>
     <section class="home">
-        <div class="text">Market Analysis</div>
+        <div class="text">Market Analysis Dashboard</div>
         <div class="container">
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <h2 class="summary-title">Key Market Insights (28 April 2025)</h2>
+                <div class="summary-content">
+                    <p>• <span class="highlight">Rice prices</span> remain stable with fine varieties showing 12.5% annual growth.</p>
+                    <p>• <span class="danger-highlight">Edible oils</span> continue to rise with soybean oil up 2.4% weekly and 13.8% annually.</p>
+                    <p>• <span class="warning-highlight">Spices show volatility</span> - onions surged 37.5% weekly while ginger prices dropped 63.6% annually.</p>
+                    <p>• <span class="highlight">Broiler chicken</span> prices decreased by 7.3% this week.</p>
+                </div>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="filterProducts('all')">All Products</div>
+                <div class="category-tab" onclick="filterProducts('rice')">Rice & Grains</div>
+                <div class="category-tab" onclick="filterProducts('oil')">Edible Oils</div>
+                <div class="category-tab" onclick="filterProducts('pulses')">Pulses</div>
+                <div class="category-tab" onclick="filterProducts('spices')">Spices</div>
+                <div class="category-tab" onclick="filterProducts('meat')">Meat & Fish</div>
+            </div>
+
             <!-- Filter Section -->
             <div class="filter-section">
                 <h2>Market Data Filter</h2>
                 <div class="filter-row">
                     <div class="filter-group">
                         <select id="citySelect">
-                            <option value="">Select City</option>
-                            <option value="dhaka">Dhaka</option>
-                            <option value="chittagong">Chittagong</option>
-                            <option value="khulna">Khulna</option>
+                            <option value="">Select Market</option>
+                            <option value="kawran">Kawran Bazar</option>
+                            <option value="mohammadpur">Mohammadpur Town Hall</option>
+                            <option value="newmarket">New Market</option>
+                            <option value="all">All Markets</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <select id="productSelect">
                             <option value="">Select Product</option>
-                            <option value="rice">Rice</option>
-                            <option value="potato">Potato</option>
+                            <option value="rice">Rice (All Types)</option>
+                            <option value="fine_rice">FineκαιRice (Nazir/Miniket)</option>
+                            <option value="coarse_rice">Coarse Rice (Swarna)</option>
+                            <option value="soybean_oil">Soybean Oil</option>
+                            <option value="palm_oil">Palm Oil</option>
                             <option value="onion">Onion</option>
+                            <option value="garlic">Garlic</option>
+                            <option value="chicken">Broiler Chicken</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <button onclick="loadData()">Show Results</button>
+                        <select id="timeSelect">
+                            <option value="weekly">Weekly Trend</option>
+                            <option value="monthly">Monthly Trend</option>
+                            <option value="yearly">Annual Trend</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button onclick="loadData()"><i class='bx bx-refresh'></i> Update View</button>
                     </div>
                 </div>
             </div>
-    
+
             <div class="error-message" id="errorMessage">No data found for selected filters</div>
-    
+
+            <!-- Price Comparison Section -->
+            <div class="chart-container">
+                <h3 class="chart-title" id="priceComparisonTitle">Price Comparison</h3>
+                <div class="price-comparison" id="priceComparison">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+
             <!-- Market Cards Container -->
             <div class="cards-grid" id="marketCards"></div>
-    
+
             <!-- Historical Price Chart -->
-            <div class="chart-container cards-grid">
-                <canvas id="priceChart"></canvas>
+            <div class="chart-container">
+                <h3 class="chart-title" id="chartTitle">Price Trend Analysis</h3>
+                <div class="chart-wrapper">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Price Trends -->
+            <div class="chart-container">
+                <h3 class="chart-title">Category Price Trends</h3>
+                <div class="chart-wrapper">
+                    <canvas id="categoryChart"></canvas>
+                </div>
             </div>
         </div>
-    
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Sample Data Structure
-            const marketData = {
-                dhaka: {
-                    rice: {
-                        markets: [
-                            { name: "Kawran Bazar", price: 48, trend: "↑ 2%" },
-                            { name: "Mirpur Market", price: 47, trend: "→" }
-                        ],
-                        history: {
-                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                            prices: [45, 46, 47, 48, 47, 48]
-                        }
-                    },
-                    potato: {
-                        markets: [
-                            { name: "Kawran Bazar", price: 22, trend: "↓ 5%" },
-                            { name: "Mirpur Market", price: 21, trend: "↓ 3%" }
-                        ],
-                        history: {
-                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                            prices: [25, 24, 23, 22, 21, 22]
-                        }
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+    <script>
+        // Enhanced Data Structure based on TCB data
+        const marketData = {
+            kawran: {
+                fine_rice: {
+                    name: "Fine Rice (Nazir/Miniket)",
+                    unit: "per kg",
+                    current_price: { min: 72, max: 85 },
+                    weekly_price: { min: 72, max: 85 },
+                    monthly_price: { min: 72, max: 87 },
+                    yearly_price: { min: 64, max: 76 },
+                    markets: [
+                        { name: "Kawran Bazar", price: 78, trend: "→ 0%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [70, 72, 75, 78]
                     }
                 },
-                chittagong: {
-                    rice: {
-                        markets: [
-                            { name: "Chittagong Market", price: 46, trend: "↑ 1.5%" }
-                        ],
-                        history: {
-                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                            prices: [44, 45, 45, 46, 45, 46]
-                        }
+                coarse_rice: {
+                    name: "Coarse Rice (Swarna)",
+                    unit: "per kg",
+                    current_price: { min: 50, max: 55 },
+                    weekly_price: { min: 50, max: 57 },
+                    monthly_price: { min: 50, max: 55 },
+                    yearly_price: { min: 50, max: 54 },
+                    markets: [
+                        { name: "Kawran Bazar", price: 52, trend: "↓ 4.9%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [54, 53, 52, 52]
+                    }
+                },
+                soybean_oil: {
+                    name: "Soybean Oil (Loose)",
+                    unit: "per liter",
+                    current_price: { min: 165, max: 172 },
+                    weekly_price: { min: 165, max: 168 },
+                    monthly_price: { min: 157, max: 165 },
+                    yearly_price: { min: 145, max: 150 },
+                    markets: [
+                        { name: "Kawran Bazar", price: 168, trend: "↑ 2.4%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [155, 160, 163, 168]
+                    }
+                },
+                onion: {
+                    name: "Onion (Local)",
+                    unit: "per kg",
+                    current_price: { min: 55, max: 65 },
+                    weekly_price: { min: 40, max: 65 },
+                    monthly_price: { min: 30, max: 45 },
+                    yearly_price: { min: 60, max: 70 },
+                    markets: [
+                        { name: "Kawran Bazar", price: 60, trend: "↑ 37.5%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [65, 50, 40, 60]
+                    }
+                },
+                chicken: {
+                    name: "Broiler Chicken",
+                    unit: "per kg",
+                    current_price: { min: 170, max: 200 },
+                    weekly_price: { min: 180, max: 205 },
+                    monthly_price: { min: 200, max: 230 },
+                    yearly_price: { min: 190, max: 210 },
+                    markets: [
+                        { name: "Kawran Bazar", price: 185, trend: "↓ 7.3%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [200, 195, 190, 185]
                     }
                 }
-            };
-    
-            let priceChart = null;
-    
-            function loadData() {
-                const city = document.getElementById('citySelect').value;
-                const product = document.getElementById('productSelect').value;
-                const marketCards = document.getElementById('marketCards');
-                const errorMessage = document.getElementById('errorMessage');
-    
-                if (!city || !product) {
-                    errorMessage.style.display = 'block';
-                    marketCards.innerHTML = '';
-                    if(priceChart) priceChart.destroy();
+            },
+            mohammadpur: {
+                fine_rice: {
+                    name: "Fine Rice (Nazir/Miniket)",
+                    unit: "per kg",
+                    current_price: { min: 72, max: 85 },
+                    weekly_price: { min: 72, max: 85 },
+                    monthly_price: { min: 72, max: 87 },
+                    yearly_price: { min: 64, max: 76 },
+                    markets: [
+                        { name: "Mohammadpur Town Hall", price: 80, trend: "→ 0%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [72, 75, 78, 80]
+                    }
+                },
+                coarse_rice: {
+                    name: "Coarse Rice (Swarna)",
+                    unit: "per kg",
+                    current_price: { min: 50, max: 55 },
+                    weekly_price: { min: 50, max: 57 },
+                    monthly_price: { min: 50, max: 55 },
+                    yearly_price: { min: 50, max: 54 },
+                    markets: [
+                        { name: "Mohammadpur Town Hall", price: 53, trend: "↓ 4.9%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [55, 54, 53, 53]
+                    }
+                }
+            },
+            newmarket: {
+                soybean_oil: {
+                    name: "Soybean Oil (Loose)",
+                    unit: "per liter",
+                    current_price: { min: 165, max: 172 },
+                    weekly_price: { min: 165, max: 168 },
+                    monthly_price: { min: 157, max: 165 },
+                    yearly_price: { min: 145, max: 150 },
+                    markets: [
+                        { name: "New Market", price: 170, trend: "↑ 2.4%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [158, 163, 167, 170]
+                    }
+                },
+                palm_oil: {
+                    name: "Palm Oil (Loose)",
+                    unit: "per liter",
+                    current_price: { min: 149, max: 156 },
+                    weekly_price: { min: 145, max: 155 },
+                    monthly_price: { min: 144, max: 153 },
+                    yearly_price: { min: 125, max: 135 },
+                    markets: [
+                        { name: "New Market", price: 152, trend: "↑ 7.4%", date: "28 Apr 2025" }
+                    ],
+                    history: {
+                        labels: ["Jan", "Feb", "Mar", "Apr"],
+                        prices: [140, 145, 148, 152]
+                    }
+                }
+            }
+        };
+
+        // Category data for the category chart
+        const categoryData = {
+            labels: ["Rice", "Edible Oils", "Pulses", "Spices", "Meat"],
+            weeklyTrends: [-2.5, 5.2, -1.8, 15.3, -4.7],
+            annualTrends: [8.5, 16.3, -5.2, -12.7, 3.4],
+            colors: ['#27ae60', '#f39c12', '#3498db', '#e74c3c', '#9b59b6']
+        };
+
+        let priceChart = null;
+        let categoryChart = null;
+
+        // Initialize the page with default data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            initCategoryChart();
+        });
+
+        function filterProducts(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter product select based on category
+            const productSelect = document.getElementById('productSelect');
+            const allOptions = productSelect.querySelectorAll('option');
+            allOptions.forEach(option => {
+                if (category === 'all' || option.value === '') {
+                    option.style.display = 'block';
+                } else {
+                    const categoryMap = {
+                        rice: ['rice', 'fine_rice', 'coarse_rice'],
+                        oil: ['soybean_oil', 'palm_oil'],
+                        spices: ['onion', 'garlic'],
+                        meat: ['chicken']
+                    };
+                    option.style.display = categoryMap[category]?.includes(option.value) || option.value === '' ? 'block' : 'none';
+                }
+            });
+            productSelect.value = '';
+            loadData();
+        }
+
+        function loadData() {
+            const city = document.getElementById('citySelect').value;
+            const product = document.getElementById('productSelect').value;
+            const timeFrame = document.getElementById('timeSelect').value;
+            const marketCards = document.getElementById('marketCards');
+            const errorMessage = document.getElementById('errorMessage');
+            const priceComparison = document.getElementById('priceComparison');
+            const priceComparisonTitle = document.getElementById('priceComparisonTitle');
+            const chartTitle = document.getElementById('chartTitle');
+
+            // Clear previous data
+            marketCards.innerHTML = '';
+            priceComparison.innerHTML = '';
+            
+            if (city === 'all' || city === '') {
+                if (product === '') {
+                    showMarketOverview();
+                    return;
+                } else {
+                    showProductAcrossMarkets(product, timeFrame);
                     return;
                 }
-    
-                const data = marketData[city]?.[product];
-                
-                if (!data) {
-                    errorMessage.style.display = 'block';
-                    marketCards.innerHTML = '';
-                    if(priceChart) priceChart.destroy();
-                    return;
-                }
-    
-                // Generate Market Cards
-                marketCards.innerHTML = data.markets.map(market => `
-                    <div class="market-card">
-                        <div class="market-header">
-                            <h3>${market.name}</h3>
-                            <p>Current Price: ৳${market.price}/kg</p>
-                        </div>
-                        <table class="price-table">
-                            <tr>
-                                <td>Weekly Trend</td>
-                                <td>${market.trend}</td>
-                            </tr>
-                            <tr>
-                                <td>City Average</td>
-                                <td>৳${calculateAverage(data.markets)}/kg</td>
-                            </tr>
-                        </table>
-                    </div>
-                `).join('');
-    
-                // Update Historical Chart
+            } else if (!city || !product) {
+                errorMessage.style.display = 'block';
                 if (priceChart) priceChart.destroy();
-                
-                const ctx = document.getElementById('priceChart').getContext('2d');
-                priceChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.history.labels,
-                        datasets: [{
-                            label: 'Price (৳/kg)',
-                            data: data.history.prices,
-                            borderColor: '#27ae60',
-                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                            tension: 0.4,
-                            pointRadius: 5
-                        }]
+                return;
+            }
+
+            const data = marketData[city]?.[product];
+            
+            if (!data) {
+                errorMessage.style.display = 'block';
+                if (priceChart) priceChart.destroy();
+                return;
+            }
+
+            // Update titles
+            priceComparisonTitle.textContent = `${data.name} Price Comparison`;
+            chartTitle.textContent = `${data.name} Price Trend`;
+
+            // Generate Price Comparison Boxes
+            priceComparison.innerHTML = `
+                <div class="price-box">
+                    <div class="price-label">Current Price</div>
+                    <div class="price-value">৳${data.current_price.min}-${data.current_price.max}</div>
+                    <div class="price-label">per ${data.unit}</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Weekly</div>
+                    <div class="price-value ${getTrendClass(data.markets[0].trend)}">${data.markets[0].trend}</div>
+                    <div class="price-label">৳${data.weekly_price.min}-${data.weekly_price.max}</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Monthly</div>
+                    <div class="price-value">${calculateMonthlyTrend(data)}</div>
+                    <div class="price-label">৳${data.monthly_price.min}-${data.monthly_price.max}</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Annual</div>
+                    <div class="price-value">${calculateAnnualTrend(data)}</div>
+                    <div class="price-label">৳${data.yearly_price.min}-${data.yearly_price.max}</div>
+                </div>
+            `;
+
+            // Generate Market Cards
+            marketCards.innerHTML = data.markets.map(market => `
+                <div class="market-card">
+                    <div class="market-header">
+                        <h3>${market.name}</h3>
+                        <p>Current Price: ৳${market.price}/${data.unit}</p>
+                        <small>Updated: ${market.date}</small>
+                    </div>
+                    <table class="price-table">
+                        <tr>
+                            <td>Price Range</td>
+                            <td>৳${data.current_price.min}-${data.current_price.max}</td>
+                        </tr>
+                        <tr>
+                            <td>Weekly Trend</td>
+                            <td class="${getTrendClass(market.trend)}">${market.trend}</td>
+                        </tr>
+                        <tr>
+                            <td>Monthly Trend</td>
+                            <td class="${getTrendClass(calculateMonthlyTrend(data))}">${calculateMonthlyTrend(data)}</td>
+                        </tr>
+                        <tr>
+                            <td>Annual Trend</td>
+                            <td class="${getTrendClass(calculateAnnualTrend(data))}">${calculateAnnualTrend(data)}</td>
+                        </tr>
+                    </table>
+                </div>
+            `).join('');
+
+            // Update Historical Chart
+            if (priceChart) priceChart.destroy();
+            
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.history.labels,
+                    datasets: [{
+                        label: `Price (৳/${data.unit})`,
+                        data: data.history.prices,
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#27ae60',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: data.yearly_price.min,
+                                    yMax: data.yearly_price.min,
+                                    borderColor: 'rgba(231, 76, 60, 0.5)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Last year min',
+                                        enabled: true,
+                                        position: 'left'
+                                    }
+                                },
+                                line2: {
+                                    type: 'line',
+                                    yMin: data.yearly_price.max,
+                                    yMax: data.yearly_price.max,
+                                    borderColor: 'rgba(231, 76, 60, 0.5)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Last year max',
+                                        enabled: true,
+                                        position: 'left'
+                                    }
+                                }
+                            }
+                        }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                title: { display: true, text: 'Price (৳/kg)' }
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: { 
+                                display: true, 
+                                text: `Price (৳/${data.unit})`,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
                     }
-                });
-    
-                errorMessage.style.display = 'none';
+                }
+            });
+
+            errorMessage.style.display = 'none';
+        }
+
+        function initCategoryChart() {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categoryData.labels,
+                    datasets: [
+                        {
+                            label: 'Weekly Price Change (%)',
+                            data: categoryData.weeklyTrends,
+                            backgroundColor: categoryData.colors.map(c => `${c}80`),
+                            borderColor: categoryData.colors,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Annual Price Change (%)',
+                            data: categoryData.annualTrends,
+                            backgroundColor: categoryData.colors.map(c => `${c}40`),
+                            borderColor: categoryData.colors,
+                            borderWidth: 1,
+                            type: 'line',
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: categoryData.colors
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: { 
+                                display: true, 
+                                text: 'Price Change (%)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw > 0 ? '+' : ''}${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showMarketOverview() {
+            const marketCards = document.getElementById('marketCards');
+            const priceComparison = document.getElementById('priceComparison');
+            const priceComparisonTitle = document.getElementById('priceComparisonTitle');
+            const chartTitle = document.getElementById('chartTitle');
+            
+            priceComparisonTitle.textContent = "Key Commodity Overview";
+            chartTitle.textContent = "Market Price Trends";
+            
+            marketCards.innerHTML = `
+                <div class="market-card">
+                    <div class="market-header">
+                        <h3>Rice & Grains</h3>
+                        <p>Stable prices with fine varieties showing growth</p>
+                    </div>
+                    <table class="price-table">
+                        <tr>
+                            <td>Fine Rice</td>
+                            <td>৳72-85/kg <span class="trend-neutral">(→)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Coarse Rice</td>
+                            <td>৳50-55/kg <span class="trend-down">(↓ 4.9%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Packet Flour</td>
+                            <td>৳64-70/kg <span class="trend-up">(↑ 6.7%)</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="market-card">
+                    <div class="market-header">
+                        <h3>Edible Oils</h3>
+                        <p>Continuing upward trend</p>
+                    </div>
+                    <table class="price-table">
+                        <tr>
+                            <td>Soybean Oil</td>
+                            <td>৳165-172/L <span class="trend-up">(↑ 2.4%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Palm Oil</td>
+                            <td>৳149-156/L <span class="trend-up">(↑ 7.4%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Annual Trend</td>
+                            <td><span class="trend-up">↑ 13-19%</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="market-card">
+                    <div class="market-header">
+                        <h3>Spices</h3>
+                        <p>High volatility in local varieties</p>
+                    </div>
+                    <table class="price-table">
+                        <tr>
+                            <td>Onion (Local)</td>
+                            <td>৳55-65/kg <span class="trend-up">(↑ 37.5%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Garlic (Local)</td>
+                            <td>৳110-160/kg <span class="trend-up">(↑ 53.8%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Annual Trend</td>
+                            <td><span class="trend-down">↓ 40-63%</span></td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+            
+            priceComparison.innerHTML = `
+                <div class="price-box">
+                    <div class="price-label">Most Stable</div>
+                    <div class="price-value">Rice</div>
+                    <div class="price-label">±2.5% weekly</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Fastest Rising</div>
+                    <div class="price-value trend-up">Spices</div>
+                    <div class="price-label">+15.3% weekly</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Biggest Drop</div>
+                    <div class="price-value trend-down">Meat</div>
+                    <div class="price-label">-4.7% weekly</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Best Annual Growth</div>
+                    <div class="price-value">Edible Oils</div>
+                    <div class="price-label">+16.3% yearly</div>
+                </div>
+            `;
+            
+            if (priceChart) priceChart.destroy();
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr"],
+                    datasets: [
+                        {
+                            label: 'Fine Rice (৳/kg)',
+                            data: [70, 72, 75, 78],
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Soybean Oil (৳/L)',
+                            data: [155, 160, 163, 168],
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Onion (৳/kg)',
+                            data: [65, 50, 40, 60],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: { 
+                                display: true, 
+                                text: 'Price',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function showProductAcrossMarkets(product, timeFrame) {
+            const marketCards = document.getElementById('marketCards');
+            const priceComparison = document.getElementById('priceComparison');
+            const priceComparisonTitle = document.getElementById('priceComparisonTitle');
+            const chartTitle = document.getElementById('chartTitle');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            const markets = Object.keys(marketData);
+            const productData = markets
+                .filter(market => marketData[market][product])
+                .map(market => ({
+                    ...marketData[market][product],
+                    marketName: marketData[market][product].markets[0].name
+                }));
+
+            if (productData.length === 0) {
+                errorMessage.style.display = 'block';
+                marketCards.innerHTML = '';
+                if (priceChart) priceChart.destroy();
+                return;
             }
-    
-            function calculateAverage(markets) {
-                return (markets.reduce((sum, market) => sum + market.price, 0) / markets.length).toFixed(2);
-            }
-        </script>
-    </section>
+
+            priceComparisonTitle.textContent = `${productData[0].name} Across Markets`;
+            chartTitle.textContent = `${productData[0].name} Price Trends`;
+
+            marketCards.innerHTML = productData.map(data => `
+                <div class="market-card">
+                    <div class="market-header">
+                        <h3>${data.marketName}</h3>
+                        <p>Current Price: ৳${data.markets[0].price}/${data.unit}</p>
+                        <small>Updated: ${data.markets[0].date}</small>
+                    </div>
+                    <table class="price-table">
+                        <tr>
+                            <td>Price Range</td>
+                            <td>৳${data.current_price.min}-${data.current_price.max}</td>
+                        </tr>
+                        <tr>
+                            <td>Weekly Trend</td>
+                            <td class="${getTrendClass(data.markets[0].trend)}">${data.markets[0].trend}</td>
+                        </tr>
+                        <tr>
+                            <td>Monthly Trend</td>
+                            <td class="${getTrendClass(calculateMonthlyTrend(data))}">${calculateMonthlyTrend(data)}</td>
+                        </tr>
+                        <tr>
+                            <td>Annual Trend</td>
+                            <td class="${getTrendClass(calculateAnnualTrend(data))}">${calculateAnnualTrend(data)}</td>
+                        </tr>
+                    </table>
+                </div>
+            `).join('');
+
+            priceComparison.innerHTML = productData.map(data => `
+                <div class="price-box">
+                    <div class="price-label">${data.marketName}</div>
+                    <div class="price-value">৳${data.current_price.min}-${data.current_price.max}</div>
+                    <div class="price-label">${data.markets[0].trend}</div>
+                </div>
+            `).join('');
+
+            if (priceChart) priceChart.destroy();
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: productData[0].history.labels,
+                    datasets: productData.map((data, index) => ({
+                        label: `${data.marketName} (৳/${data.unit})`,
+                        data: data.history.prices,
+                        borderColor: categoryData.colors[index % categoryData.colors.length],
+                        backgroundColor: `${categoryData.colors[index % categoryData.colors.length]}20`,
+                        tension: 0.4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: { 
+                                display: true, 
+                                text: `Price (৳/${productData[0].unit})`,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            errorMessage.style.display = 'none';
+        }
+
+        function calculateMonthlyTrend(data) {
+            const currentAvg = (data.current_price.min + data.current_price.max) / 2;
+            const monthlyAvg = (data.monthly_price.min + data.monthly_price.max) / 2;
+            const change = ((currentAvg - monthlyAvg) / monthlyAvg * 100).toFixed(1);
+            return `${change > 0 ? '↑' : change < 0 ? '↓' : '→'} ${Math.abs(change)}%`;
+        }
+
+        function calculateAnnualTrend(data) {
+            const currentAvg = (data.current_price.min + data.current_price.max) / 2;
+            const yearlyAvg = (data.yearly_price.min + data.yearly_price.max) / 2;
+            const change = ((currentAvg - yearlyAvg) / yearlyAvg * 100).toFixed(1);
+            return `${change > 0 ? '↑' : change < 0 ? '↓' : '→'} ${Math.abs(change)}%`;
+        }
+
+        function getTrendClass(trend) {
+            if (trend.includes('↑')) return 'trend-up';
+            if (trend.includes('↓')) return 'trend-down';
+            return 'trend-neutral';
+        }
+    </script>
     <script>
         const body = document.querySelector('body'),
       sidebar = body.querySelector('nav'),
