@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard | AgriMarket</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #66bb6a;
+            --accent: #ff9800;
+            --blue: #2196f3;
+        }
+
+        .home {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%);
+        }
+
+        body.dark .home {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dashboard-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px) rotate(-1deg);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .dashboard-card {
+            background: #2d2d2d;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 8px 16px rgba(46, 125, 50, 0.3);
+        }
+
+        .card-value {
+            font-size: 40px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Featured Products */
+        .product-card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.03);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.4);
+        }
+
+        /* Orders Section */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        body.dark .order-card {
+            background: #2d2d2d;
+        }
+
+        .order-status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--primary);
+        }
+
+        .status-pending {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--accent);
+        }
+
+        .status-shipping {
+            background: rgba(33, 150, 243, 0.15);
+            color: var(--blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #2e7d32, #66bb6a); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        🛒
+                    </div>
+                </span>
+                <div class="text logo-text">
+                    <span class="name">AgriMarket</span>
+                    <span class="profession">Buyer</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a class="active" href="buyerDashboard-new.html" data-tooltip="Dashboard">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="byersProduct.html" data-tooltip="Browse Products">
+                            <i class='bx bx-store-alt icon'></i>
+                            <span class="text nav-text">Browse Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="byerOrders.html" data-tooltip="My Orders">
+                            <i class='fas fa-shopping-bag icon'></i>
+                            <span class="text nav-text">My Orders</span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="buyerNotifications.html" data-tooltip="Notifications">
+                            <i class='bx bx-bell icon'></i>
+                            <span class="text nav-text">Notifications</span>
+                            <span class="badge">5</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="buyerAnalytics.html" data-tooltip="Analytics">
+                            <i class='bx bx-pie-chart-alt icon'></i>
+                            <span class="text nav-text">Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="buyerWallet.html" data-tooltip="Wallet">
+                            <i class='bx bx-wallet icon'></i>
+                            <span class="text nav-text">Wallet</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li>
+                    <a href="index.html" data-tooltip="Logout">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="home">
+        <div class="container-fluid">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner animate-fade-in" style="background: linear-gradient(135deg, #2196f3 0%, #64b5f6 100%); color: white; padding: 32px; border-radius: 20px; margin-bottom: 30px; position: relative; overflow: hidden;">
+                <div style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); font-size: 120px; opacity: 0.1;">🛍️</div>
+                <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 8px;">Welcome back, Buyer! 👋</h2>
+                <p class="mb-0">Find the freshest products from local farmers</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="dashboard-card animate-scale-in delay-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="text-muted mb-2">Total Spent</h6>
+                                    <h2 class="card-value">৳12,430</h2>
+                                </div>
+                                <div class="card-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center text-success">
+                                <i class="fas fa-arrow-up me-2"></i>
+                                <span class="small fw-bold">8% from last month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="dashboard-card animate-scale-in delay-200">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="text-muted mb-2">Active Bids</h6>
+                                    <h2 class="card-value" data-counter="12">0</h2>
+                                </div>
+                                <div class="card-icon" style="background: linear-gradient(135deg, #ff9800, #ffb74d);">
+                                    <i class="fas fa-gavel"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center" style="color: #ff9800;">
+                                <i class="fas fa-clock me-2"></i>
+                                <span class="small fw-bold">3 ending soon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="dashboard-card animate-scale-in delay-300">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="text-muted mb-2">Orders Placed</h6>
+                                    <h2 class="card-value" data-counter="28">0</h2>
+                                </div>
+                                <div class="card-icon" style="background: linear-gradient(135deg, #2196f3, #42a5f5);">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center text-success">
+                                <i class="fas fa-arrow-up me-2"></i>
+                                <span class="small fw-bold">5 new this week</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="dashboard-card animate-scale-in delay-400">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="text-muted mb-2">Pending Deliveries</h6>
+                                    <h2 class="card-value" data-counter="4">0</h2>
+                                </div>
+                                <div class="card-icon" style="background: linear-gradient(135deg, #f44336, #ef5350);">
+                                    <i class="fas fa-truck-loading"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center" style="color: #f44336;">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <span class="small fw-bold">1 urgent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4><i class="fas fa-star text-warning me-2"></i>Featured Products</h4>
+                        <a href="byersProduct.html" class="btn btn-primary btn-sm">View All</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="product-card hover-lift">
+                        <div class="product-image">
+                            <span class="product-badge">HOT</span>
+                            <img src="images/mango.jpg" alt="Mango">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2">Organic Mango</h6>
+                            <p class="text-muted small mb-2">By Mithapukur Farms</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">৳85/kg</span>
+                                <button class="btn btn-sm btn-primary ripple"><i class="fas fa-cart-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="product-card hover-lift">
+                        <div class="product-image">
+                            <span class="product-badge">NEW</span>
+                            <img src="images/tomato.jpg" alt="Tomato">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2">Fresh Tomatoes</h6>
+                            <p class="text-muted small mb-2">By Green Valley</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">৳45/kg</span>
+                                <button class="btn btn-sm btn-primary ripple"><i class="fas fa-cart-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="product-card hover-lift">
+                        <div class="product-image">
+                            <img src="images/apples.jpg" alt="Apples">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2">Fresh Apples</h6>
+                            <p class="text-muted small mb-2">By Fruit Garden</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">৳300/kg</span>
+                                <button class="btn btn-sm btn-primary ripple"><i class="fas fa-cart-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="product-card hover-lift">
+                        <div class="product-image">
+                            <span class="product-badge" style="background: #f44336;">SALE</span>
+                            <img src="images/potato.jpg" alt="Potato">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2">Organic Potatoes</h6>
+                            <p class="text-muted small mb-2">By Ahmed Farms</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">৳30/kg</span>
+                                <button class="btn btn-sm btn-primary ripple"><i class="fas fa-cart-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mb-4"><i class="fas fa-history text-primary me-2"></i>Recent Orders</h4>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="order-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Order #1234</h6>
+                                <p class="text-muted small mb-0">Placed on Dec 10, 2023</p>
+                            </div>
+                            <span class="order-status status-delivered">Delivered</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Organic Mango - 10kg</span>
+                            <span class="fw-bold">৳850</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="order-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Order #1235</h6>
+                                <p class="text-muted small mb-0">Placed on Dec 12, 2023</p>
+                            </div>
+                            <span class="order-status status-shipping">Shipping</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Fresh Tomatoes - 5kg</span>
+                            <span class="fw-bold">৳225</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="order-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Order #1236</h6>
+                                <p class="text-muted small mb-0">Placed on Dec 14, 2023</p>
+                            </div>
+                            <span class="order-status status-pending">Pending</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Fresh Apples - 3kg</span>
+                            <span class="fw-bold">৳900</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="order-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Order #1237</h6>
+                                <p class="text-muted small mb-0">Placed on Dec 15, 2023</p>
+                            </div>
+                            <span class="order-status status-delivered">Delivered</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Organic Potatoes - 20kg</span>
+                            <span class="fw-bold">৳600</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>

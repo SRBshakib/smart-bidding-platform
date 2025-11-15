@@ -6,6 +6,7 @@
     <title>AgriMarket - Agricultural Marketplace</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/animations.css">
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -22,10 +23,11 @@
         }
         
         .header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
             color: white;
-            padding: 8px 0;
+            padding: 10px 0;
             font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .sticky-nav {
@@ -33,38 +35,128 @@
             position: sticky;
             top: 0;
             z-index: 1020;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sticky-nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.12);
         }
         
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary-color);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .navbar-brand .logo-icon {
+            font-size: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        .navbar {
+            padding: 15px 0;
         }
         
         .nav-link {
             color: var(--dark-text);
-            font-weight: 500;
-            padding: 8px 15px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
         
         .nav-link:hover {
             color: var(--primary-color);
+            background: rgba(46, 125, 50, 0.05);
+        }
+        
+        .nav-link:hover::before {
+            width: 80%;
+        }
+        
+        .nav-link .badge {
+            animation: pulse 2s ease-in-out infinite;
         }
         
         .search-box {
-            border-radius: 20px;
-            border: 1px solid #ced4da;
-            padding: 8px 15px;
+            border-radius: 25px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
         }
         
         .search-btn {
-            border-radius: 20px;
-            padding: 8px 20px;
-            background-color: var(--primary-color);
+            border-radius: 25px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
             color: white;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 10px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.2s ease;
+            margin-bottom: 2px;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(46, 125, 50, 0.1);
+            color: var(--primary-color);
+            transform: translateX(5px);
         }
         
         .carousel-item {
@@ -96,14 +188,33 @@
         
         
         .promo-card {
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s;
+            transition: all 0.4s ease;
             height: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .promo-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .promo-card:hover::before {
+            opacity: 1;
         }
         
         .section-title {
@@ -124,15 +235,35 @@
         
         .product-card {
             border: 1px solid #e9ecef;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             height: 100%;
+            background: white;
+            position: relative;
+        }
+        
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+            transition: box-shadow 0.3s ease;
+            pointer-events: none;
         }
         
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            border-color: var(--primary-color);
+        }
+        
+        .product-card:hover::after {
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
         }
         
         .product-img {
@@ -473,44 +604,53 @@
 <!-- Sticky Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light sticky-nav">
     <div class="container">
-        <a class="navbar-brand" href="#">🌾 AgriMarket</a>
+        <a class="navbar-brand" href="index.html">
+            <span class="logo-icon">🌾</span>
+            <span>AgriMarket</span>
+        </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarContent">
-            <form class="d-flex me-auto ms-3">
-                <input class="form-control search-box" type="search" placeholder="Search products...">
-                <button class="btn search-btn ms-2" type="submit"><i class="fas fa-search"></i></button>
+            <form class="d-flex me-auto ms-3 flex-grow-1" style="max-width: 500px;">
+                <div class="input-group">
+                    <input class="form-control search-box" type="search" placeholder="Search products, farmers..." aria-label="Search">
+                    <button class="btn search-btn" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
             </form>
 
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center gap-1">
                 <li class="nav-item">
-  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">
-    <i class="fas fa-user-plus me-1"></i> Sign Up
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
-    <i class="fas fa-sign-in-alt me-1"></i> Login
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
-    <i class="fas fa-shopping-cart me-1"></i> Cart 
-    <span class="badge bg-primary rounded-pill">0</span>
-  </a>
-</li>
+                    <a class="nav-link ripple" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">
+                        <i class="fas fa-user-plus me-1"></i> Sign Up
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ripple" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-sign-in-alt me-1"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ripple position-relative" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+                        <i class="fas fa-shopping-cart me-1"></i> Cart 
+                        <span class="badge bg-primary rounded-pill position-absolute top-0 start-100 translate-middle">0</span>
+                    </a>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle ripple" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user-circle me-1"></i> Account
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="login.html"><i class="fas fa-user me-2"></i>My Dashboard</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-box me-2"></i>My Orders</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="farmerdashboard.html"><i class="fas fa-tractor me-2 text-primary"></i>Farmer Dashboard</a></li>
+                        <li><a class="dropdown-item" href="buyerDashboard.html"><i class="fas fa-shopping-bag me-2 text-success"></i>Buyer Dashboard</a></li>
+                        <li><a class="dropdown-item" href="adminDashboard.html"><i class="fas fa-user-shield me-2 text-warning"></i>Admin Dashboard</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -1248,12 +1388,35 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/animations.js"></script>
 <script>
     // Document ready function
     document.addEventListener('DOMContentLoaded', function() {
+        // Add scroll effect to navbar
+        const navbar = document.querySelector('.sticky-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Add animation to elements on page load
+        const cards = document.querySelectorAll('.product-card, .promo-card, .market-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 50);
+        });
+
         // Initialize carousel with auto-rotation
         const myCarousel = new bootstrap.Carousel(document.getElementById('mainCarousel'), {
-            interval: 5000, // Rotate every 5 seconds
+            interval: 5000,
             wrap: true
         });
 
@@ -1273,7 +1436,18 @@
         document.querySelectorAll('.bid-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const productName = this.closest('.product-details').querySelector('h5').textContent;
-                alert(`Your bid for ${productName} has been placed successfully!`);
+                
+                // Show loading state
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Placing Bid...';
+                this.disabled = true;
+                
+                // Simulate bid placement
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                    showNotification(`Your bid for ${productName} has been placed successfully!`, 'success');
+                }, 1000);
             });
         });
 
