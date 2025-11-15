@@ -1,11 +1,12 @@
 /* ============================================
-   PROFESSIONAL SIDEBAR DESIGN
+   PROFESSIONAL SIDEBAR DESIGN - UNIFIED
+   AgriMarket Platform
    ============================================ */
 
 :root {
     --sidebar-width: 280px;
     --sidebar-collapsed-width: 80px;
-    --primary: #2e7d32;
+    --primary: #27ae60;
     --primary-light: #66bb6a;
     --primary-dark: #1b5e20;
     --secondary: #f8f9fa;
@@ -15,6 +16,9 @@
     --sidebar-bg: #ffffff;
     --sidebar-hover: #f8f9fa;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 body.dark {
@@ -34,14 +38,24 @@ body.dark {
     width: var(--sidebar-width);
     background: var(--sidebar-bg);
     padding: 20px 14px;
-    z-index: 100;
+    z-index: 1000;
     transition: var(--transition);
-    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
 }
 
 .sidebar.close {
     width: var(--sidebar-collapsed-width);
+}
+
+/* Main content adjustment */
+.home {
+    margin-left: var(--sidebar-width);
+    transition: var(--transition);
+}
+
+.sidebar.close ~ .home {
+    margin-left: var(--sidebar-collapsed-width);
 }
 
 /* Sidebar Header */
@@ -51,6 +65,7 @@ body.dark {
     align-items: center;
     justify-content: space-between;
     padding-bottom: 20px;
+    margin-bottom: 10px;
     border-bottom: 2px solid var(--border-color);
 }
 
@@ -60,47 +75,54 @@ body.dark {
     gap: 12px;
 }
 
-.sidebar .logo-image {
+.sidebar .image {
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 50px;
-    height: 50px;
 }
 
-.sidebar .logo-image img {
-    width: 100%;
-    border-radius: 50%;
-    animation: rotate 20s linear infinite;
+.sidebar .logo-emoji {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.sidebar:not(.close) .logo-emoji:hover {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: var(--shadow-md);
 }
 
 .sidebar .logo-text {
     display: flex;
     flex-direction: column;
+    opacity: 1;
+    transition: var(--transition);
 }
 
 .sidebar .name {
     font-size: 20px;
     font-weight: 700;
     color: var(--primary);
-    transition: var(--transition);
     white-space: nowrap;
 }
 
 .sidebar .profession {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-color);
-    margin-top: -4px;
+    margin-top: -2px;
     white-space: nowrap;
+    opacity: 0.8;
 }
 
-.sidebar.close .name,
-.sidebar.close .profession {
+.sidebar.close .logo-text {
     opacity: 0;
     pointer-events: none;
 }
@@ -277,6 +299,40 @@ body.dark {
 .sidebar .nav-link a:hover .text,
 .sidebar .nav-link a.active .text {
     color: var(--primary);
+}
+
+/* Notification Badge */
+.sidebar .nav-link .notification-badge {
+    margin-left: auto;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    font-size: 11px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5);
+    }
+}
+
+.sidebar.close .nav-link .notification-badge {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Badge */

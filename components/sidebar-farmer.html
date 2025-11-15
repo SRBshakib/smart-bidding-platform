@@ -1,0 +1,151 @@
+<!-- Farmer Sidebar Component -->
+<nav class="sidebar close" id="sidebar">
+    <header>
+        <div class="image-text">
+            <span class="image">
+                <div class="logo-emoji">🌾</div>
+            </span>
+            <div class="text logo-text">
+                <span class="name">AgriMarket</span>
+                <span class="profession">Farmer Portal</span>
+            </div>
+        </div>
+        <i class='bx bx-chevron-right toggle'></i>
+    </header>
+    
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                <i class='bx bx-search icon'></i>
+                <input type="text" placeholder="Search...">
+            </li>
+            
+            <ul class="menu-links">
+                <li class="nav-link" data-page="farmerdashboard">
+                    <a href="farmerdashboard.html" data-tooltip="Dashboard">
+                        <i class='bx bx-home-alt icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="addproduct">
+                    <a href="addProduct-new.html" data-tooltip="Add Product">
+                        <i class='bx bx-plus-circle icon'></i>
+                        <span class="text nav-text">Add Product</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="farmerbidding">
+                    <a href="farmerBidding-new.html" data-tooltip="Bidding">
+                        <i class='fas fa-gavel icon'></i>
+                        <span class="text nav-text">Bidding</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="farmernotification">
+                    <a href="farmerNotification-new.html" data-tooltip="Notifications">
+                        <i class='bx bx-bell icon'></i>
+                        <span class="text nav-text">Notifications</span>
+                        <span class="notification-badge">8</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="marketanalysis">
+                    <a href="marketAnalysis.html" data-tooltip="Analytics">
+                        <i class='bx bx-pie-chart-alt icon'></i>
+                        <span class="text nav-text">Analytics</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="farmerwallet">
+                    <a href="farmerWallet-new.html" data-tooltip="Wallet">
+                        <i class='bx bx-wallet icon'></i>
+                        <span class="text nav-text">Wallet</span>
+                    </a>
+                </li>
+                
+                <li class="nav-link" data-page="farmerprofile">
+                    <a href="farmerProfile.html" data-tooltip="Profile">
+                        <i class='bx bx-user icon'></i>
+                        <span class="text nav-text">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bottom-content">
+            <li class="nav-link">
+                <a href="index.html" data-tooltip="Logout">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">Logout</span>
+                </a>
+            </li>
+            
+            <li class="mode">
+                <div class="sun-moon">
+                    <i class='bx bx-moon icon moon'></i>
+                    <i class='bx bx-sun icon sun'></i>
+                </div>
+                <span class="mode-text text">Dark mode</span>
+                <div class="toggle-switch">
+                    <span class="switch"></span>
+                </div>
+            </li>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Sidebar functionality
+    const body = document.querySelector('body');
+    const sidebar = document.querySelector('.sidebar');
+    const toggle = document.querySelector('.toggle');
+    const searchBtn = document.querySelector('.search-box');
+    const modeSwitch = document.querySelector('.toggle-switch');
+    const modeText = document.querySelector('.mode-text');
+
+    // Toggle sidebar
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            sidebar.classList.toggle('close');
+            localStorage.setItem('sidebarClosed', sidebar.classList.contains('close'));
+        });
+    }
+
+    // Search box click
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            sidebar.classList.remove('close');
+        });
+    }
+
+    // Dark mode toggle
+    if (modeSwitch) {
+        modeSwitch.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            modeText.innerText = isDark ? 'Light mode' : 'Dark mode';
+            localStorage.setItem('darkMode', isDark);
+        });
+    }
+
+    // Restore sidebar state
+    if (localStorage.getItem('sidebarClosed') === 'true') {
+        sidebar.classList.add('close');
+    }
+
+    // Restore dark mode
+    if (localStorage.getItem('darkMode') === 'true') {
+        body.classList.add('dark');
+        modeText.innerText = 'Light mode';
+    }
+
+    // Highlight active page
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '').toLowerCase();
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const page = link.getAttribute('data-page');
+        if (page && currentPage.includes(page)) {
+            link.querySelector('a').classList.add('active');
+        }
+    });
+</script>

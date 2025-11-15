@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | AgriMarket</title>
+    <link rel="stylesheet" href="css/Style.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #27ae60;
+            --secondary-color: #2ecc71;
+            --accent-color: #66bb6a;
+            --background: #f5f6fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --card-hover-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .home {
+            margin-left: 280px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .sidebar.close ~ .home {
+            margin-left: 80px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-add-product {
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-product:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .stat-card.warning::before { background: var(--warning-color); }
+        .stat-card.danger::before { background: var(--danger-color); }
+        .stat-card.info::before { background: var(--info-color); }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 15px;
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--primary-color);
+        }
+
+        .stat-card.warning .stat-icon {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .stat-card.danger .stat-icon {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .stat-card.info .stat-icon {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .product-badge.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .product-badge.low {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .product-badge.expiring {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .product-content {
+            padding: 20px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .product-category {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Add Product Modal */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 30px;
+            border: none;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section-title i {
+            color: var(--primary-color);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+
+        .image-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .image-upload i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-state i {
+            font-size: 100px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .home {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .sidebar.close ~ .home {
+                margin-left: 0;
+            }
+
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #2e7d32, #66bb6a); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        🌾
+                    </div>
+                </span>
+                <div class="text logo-text">
+                    <span class="name">AgriMarket</span>
+                    <span class="profession">Farmer</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="farmerdashboard-new.html" data-tooltip="Dashboard">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a class="active" href="addProduct-new.html" data-tooltip="Add Product">
+                            <i class='bx bx-plus-circle icon'></i>
+                            <span class="text nav-text">Add Product</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerBidding-new.html" data-tooltip="Bidding">
+                            <i class='fas fa-gavel icon'></i>
+                            <span class="text nav-text">Bidding</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerNotification-new.html" data-tooltip="Notifications">
+                            <i class='bx bx-bell icon'></i>
+                            <span class="text nav-text">Notifications</span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="marketAnalysis.html" data-tooltip="Analytics">
+                            <i class='bx bx-pie-chart-alt icon'></i>
+                            <span class="text nav-text">Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerWallet-new.html" data-tooltip="Wallet">
+                            <i class='bx bx-wallet icon'></i>
+                            <span class="text nav-text">Wallet</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="farmerProfile.html" data-tooltip="Profile">
+                            <i class='bx bx-user icon'></i>
+                            <span class="text nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li>
+                    <a href="index.html" data-tooltip="Logout">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="home">
+        <!-- Page Header -->
+        <div class="page-header animate-fade-in">
+            <h1><i class="fas fa-box-open"></i> Product Management</h1>
+            <p>Add, manage, and track your agricultural products</p>
+            <div class="header-actions">
+                <button class="btn-add-product ripple" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card animate-scale-in delay-100">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-value" data-target="12">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+
+            <div class="stat-card info animate-scale-in delay-200">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" data-target="8">0</div>
+                <div class="stat-label">Active Listings</div>
+            </div>
+
+            <div class="stat-card warning animate-scale-in delay-300">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-value" data-target="2">0</div>
+                <div class="stat-label">Low Stock</div>
+            </div>
+
+            <div class="stat-card danger animate-scale-in delay-400">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" data-target="1">0</div>
+                <div class="stat-label">Expiring Soon</div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Product Card 1 -->
+            <div class="product-card animate-fade-in-up delay-100">
+                <div style="position: relative;">
+                    <div class="product-image">🥕</div>
+                    <span class="product-badge active">Active</span>
+                </div>
+                <div class="product-content">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Fresh Carrots</h3>
+                            <p class="product-category">
+                                <i class="fas fa-tag"></i> Vegetables
+                            </p>
+                        </div>
+                        <div class="product-price">৳110</div>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Stock</span>
+                            <span class="detail-value">50 kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Unit</span>
+                            <span class="detail-value">per 5kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Added</span>
+                            <span class="detail-value">2 days ago</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Expires</span>
+                            <span class="detail-value">15 days</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-action btn-edit ripple">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-delete ripple">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card animate-fade-in-up delay-200">
+                <div style="position: relative;">
+                    <div class="product-image">🌾</div>
+                    <span class="product-badge low">Low Stock</span>
+                </div>
+                <div class="product-content">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Premium Rice</h3>
+                            <p class="product-category">
+                                <i class="fas fa-tag"></i> Grains
+                            </p>
+                        </div>
+                        <div class="product-price">৳850</div>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Stock</span>
+                            <span class="detail-value">15 kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Unit</span>
+                            <span class="detail-value">per 10kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Added</span>
+                            <span class="detail-value">5 days ago</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Expires</span>
+                            <span class="detail-value">60 days</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-action btn-edit ripple">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-delete ripple">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card animate-fade-in-up delay-300">
+                <div style="position: relative;">
+                    <div class="product-image">🍅</div>
+                    <span class="product-badge expiring">Expiring</span>
+                </div>
+                <div class="product-content">
+                    <div class="product-header">
+                        <div>
+                            <h3 class="product-title">Organic Tomatoes</h3>
+                            <p class="product-category">
+                                <i class="fas fa-tag"></i> Vegetables
+                            </p>
+                        </div>
+                        <div class="product-price">৳45</div>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Stock</span>
+                            <span class="detail-value">80 kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Unit</span>
+                            <span class="detail-value">per kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Added</span>
+                            <span class="detail-value">1 week ago</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Expires</span>
+                            <span class="detail-value" style="color: var(--danger-color);">3 days</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-action btn-edit ripple">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-delete ripple">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h6 class="form-section-title">
+                                <i class="fas fa-info-circle"></i>
+                                Basic Information
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Name *</label>
+                                    <input type="text" class="form-control" placeholder="e.g., Fresh Carrots" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Category *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select category</option>
+                                        <option value="vegetables">Vegetables</option>
+                                        <option value="fruits">Fruits</option>
+                                        <option value="grains">Grains</option>
+                                        <option value="dairy">Dairy</option>
+                                        <option value="others">Others</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" rows="3" placeholder="Describe your product..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing & Stock -->
+                        <div class="form-section">
+                            <h6 class="form-section-title">
+                                <i class="fas fa-dollar-sign"></i>
+                                Pricing & Stock
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Price (৳) *</label>
+                                    <input type="number" class="form-control" placeholder="0.00" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Unit *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select unit</option>
+                                        <option value="kg">per kg</option>
+                                        <option value="5kg">per 5kg</option>
+                                        <option value="10kg">per 10kg</option>
+                                        <option value="piece">per piece</option>
+                                        <option value="dozen">per dozen</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Available Stock *</label>
+                                    <input type="number" class="form-control" placeholder="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="form-section">
+                            <h6 class="form-section-title">
+                                <i class="fas fa-calendar"></i>
+                                Additional Details
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Harvest Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" placeholder="Farm location">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Selling Type</label>
+                                    <select class="form-select">
+                                        <option value="direct">Direct Sale</option>
+                                        <option value="bidding">Bidding</option>
+                                        <option value="both">Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="form-section">
+                            <h6 class="form-section-title">
+                                <i class="fas fa-image"></i>
+                                Product Image
+                            </h6>
+                            <div class="image-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h6>Click to upload image</h6>
+                                <p class="text-muted mb-0">PNG, JPG or JPEG (Max. 5MB)</p>
+                                <input type="file" class="d-none" accept="image/*">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-check-circle"></i> Add Product
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+        // Animate counter numbers
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('[data-target]');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+
+            // Image upload handler
+            document.querySelector('.image-upload').addEventListener('click', function() {
+                this.querySelector('input[type="file"]').click();
+            });
+
+            // Form submission
+            document.getElementById('addProductForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Product added successfully!');
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>
